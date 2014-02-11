@@ -8,9 +8,13 @@
   (find-divisor n 2))
 
 (define (find-divisor n test-divisor)
+  (define (next-skip-even t)
+    (if (= n 2) 3 (+ t 2)))
+  (define (next t)
+    (+ 1 t))
   (cond ((> (square test-divisor) n) n)
         ((divisor? test-divisor n) test-divisor)
-        (else (find-divisor n (+ test-divisor 1)))))
+        (else (find-divisor n (next-skip-even test-divisor)))))
 
 (define (divisor? b a)
   (= 0 (remainder a b)))
@@ -175,7 +179,6 @@
   (time (prime? n)))
 
 (define (search-for-primes n amounts)
- 
   (if (> amounts 0)
       (cond ((timed-prime-test n) 
              (display n)
@@ -184,3 +187,6 @@
             (else (search-for-primes (+ n 2) amounts))
         )
       null))
+
+;1.23 the ratio is about 7:4. Because the 'if', it doesn't halve the time.
+
