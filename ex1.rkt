@@ -165,3 +165,22 @@
                       (- n 1)))))
   (iter 1 0 0 1 n))
 
+;1.21
+;(smallest-divisor 199)
+;(smallest-divisor 1999)
+;(smallest-divisor 19999)
+
+;1.22
+(define (timed-prime-test n)
+  (time (prime? n)))
+
+(define (search-for-primes n amounts)
+ 
+  (if (> amounts 0)
+      (cond ((timed-prime-test n) 
+             (display n)
+             (display "\n")
+             (search-for-primes (+ n 2) (- amounts 1)))
+            (else (search-for-primes (+ n 2) amounts))
+        )
+      null))
