@@ -104,4 +104,28 @@
           (else (iter (+ product x) x (- y 1)))))
   (iter 0 x y))
 
+;1.19
+(define (fast-fib n)
+  (define (square x) (* x x))
+  
+  (define (transP p q)
+    (+ (square p) (square q)))
+  
+  (define (apply-trans-a p q a b)
+    (+ (* b q) (* a q) (* a p)))
+  
+  (define (apply-trans-b p q a b)
+    (+ (* b p) (* a q)))
+  
+  (define (transQ p q)
+    (+ (* 2 (* p q)) (square q)))
+  
+  (define (iter a b p q n)
+    (cond ((= n 0) b)
+          ((even? n) (iter a b (transP p q) (transQ p q) (/ n 2)))
+          (else (iter (apply-trans-a p q a b)
+                      (apply-trans-b p q a b)
+                      p 
+                      q
+                      (- n 1)))))
 
