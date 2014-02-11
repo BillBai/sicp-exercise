@@ -79,3 +79,29 @@
           ((even? n) (iter a (square b) (/ n 2)))
           (else (iter (* a b) b (- n 1)))))
   (iter 1 b n))
+
+;1.17
+(define (multi a b)
+  (define (double x)
+    (+ x x))
+  (define (halve x)
+    (/ x 2))
+  
+  (cond
+    ((= b 0) 0)
+    ((even? b) (double (multi a (halve b))))
+    (else (+ a (multi a (- b 1))))))
+
+;1.18
+(define (multi-iter-ver x y)
+  (define (double x)
+    (+ x x))
+  (define (halve x)
+    (/ x 2))
+  (define (iter product x y)
+    (cond ((= y 0) product)
+          ((even? y) (iter product (double x) (halve y)))
+          (else (iter (+ product x) x (- y 1)))))
+  (iter 0 x y))
+
+
