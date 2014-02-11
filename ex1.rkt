@@ -1,6 +1,41 @@
 #lang scheme
 (require (planet soegaard/sicp:2:1/sicp))
 
+;utilites
+(define (square x) (* x x))
+
+(define (smallest-divisor n)
+  (find-divisor n 2))
+
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) n)
+        ((divisor? test-divisor n) test-divisor)
+        (else (find-divisor n (+ test-divisor 1)))))
+
+(define (divisor? b a)
+  (= 0 (remainder a b)))
+
+(define (prime? n)
+  (= n (smallest-divisor n)))
+
+
+(define (expmod base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp) (remainder (square (expmod base (/ exp 2) m)) 
+                                m))
+        (else (remainder (* base (expmod base (- exp 1) m))
+                         m))))
+
+(define (fermat-test n)
+  (define (try a)
+    (= (remainder (expmod a n n) n) (remainder a n)))
+  (try (+ 1 (random (- n 1)))))
+
+(define (fast-prime? n times)
+  (cond ((= times 0) true)
+        ((fermat-test n) (fast-prime? n (- times 1)))
+        (else false)))
+
 ;1.3
 (define (largest-two-sum x y z)
   (define (larger a b)
@@ -128,4 +163,5 @@
                       p 
                       q
                       (- n 1)))))
+  (iter 1 0 0 1 n))
 
