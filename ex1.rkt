@@ -40,6 +40,11 @@
         ((fermat-test n) (fast-prime? n (- times 1)))
         (else false)))
 
+(define (get-sum f a next b)
+  (if (> a b)
+      0.0
+      (+ (f a) (get-sum f (next a) next b))))
+
 ;1.3
 (define (largest-two-sum x y z)
   (define (larger a b)
@@ -176,7 +181,7 @@
 
 ;1.22
 (define (timed-prime-test n)
-  (time (prime? n)))
+  (time (fast-prime? n 100)))
 
 (define (search-for-primes n amounts)
   (if (> amounts 0)
@@ -189,4 +194,51 @@
       null))
 
 ;1.23 the ratio is about 7:4. Because the 'if', it doesn't halve the time.
+
+
+;1.29
+(define (integral f a b dx)
+  (define (add-dx a) (+ a dx))
+  (* (get-sum f (+ a (/ dx 2.0)) add-dx b)
+     dx))
+
+
+(define (simpson-integral f a b n)
+  (define h (/ (- b a) n))
+  (define (add-2h x) (+ x (* 2.0 h)))
+  (* (/ h 3.0)
+     (+ (f a)
+        (* 4.0 (get-sum f (+ a h) add-2h (- b h)))
+        (* 2.0 (get-sum f (+ a (* 2.0 h)) add-2h (- b (* 2 h))))
+        (f b))))
+
+;1.30
+(define (get-sum-iter f a next b)
+  (define (iter a product)
+    (if (> a b)
+        product
+        (iter (next a) (+ product (f a)))))
+  (iter a 0))
+
+;1.31
+(define (get-product-iter f a next b)
+  (define (iter a product)
+    (if (> a b)
+        product
+        (iter (next a) (* product (f a)))))
+  (iter a 1.0))
+
+(define (get-product f a next b)
+  (if (> a b)
+      1.0
+      (* (f a) (get-product f (next a) next b))))
+
+(define (factorial n)
+  (get-product-iter (lambda (x) x) 1 (lambda (x) (+ x 1)) n))
+
+(define (qut-pi n)
+  (* (get-product-iter (lambda (a) (/ a (+ a 1.0))) 2 (lambda (x) (+ x 2.0)) n)
+     (get-product-iter (lambda (a) (/ a (- a 1.0))) 4 (lambda (x) (+ x 2.0)) n)))
+
+(define my-pi (* 4.0 (qut-pi 1000)))
 
